@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,7 +8,7 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(Users.name) private userSchema: Model<Users>) {}
+  constructor(@InjectModel(Users.name) private userSchema: Model<Users>) { }
 
   async create(createUserDto: CreateUserDto) {
     const encryptedPass = await bcrypt.hash(
@@ -30,16 +30,20 @@ export class UserService {
     else throw new NotFoundException('user not found.');
   }
 
-  async update(_id: string, updateUserDto: UpdateUserDto) {
+  async update(_id: string, updateUserDto: UpdateUserDto, userId: string) {
     const user = await this.userSchema.findById(_id);
-    if (user)
-      return await this.userSchema.findByIdAndUpdate(_id, updateUserDto);
+    if (user) {
+      if (user._id.toString() === userId)
+        return await this.userSchema.findByIdAndUpdate(_id, updateUserDto);
+      else throw new ForbiddenException("Can not mutate other entity.")
+    }
     else throw new NotFoundException('user not found.');
   }
 
   async remove(_id: string) {
-    const users = await this.userSchema.findByIdAndDelete(_id);
-    if (users) return users;
+    const user = await this.userSchema.findById(_id);
+    if (user)
+      return await this.userSchema.findByIdAndDelete({ _id });
     else throw new NotFoundException('user not found.');
   }
 

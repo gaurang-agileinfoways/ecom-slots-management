@@ -9,7 +9,6 @@ import { ResponseDto } from 'src/utils/response.dto';
 export class BidsController {
   constructor(private readonly bidsService: BidsService) { }
 
-
   @UseGuards(AuthGuard)
   @Post('add')
   async create(
@@ -44,13 +43,14 @@ export class BidsController {
     );
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateBidDto: UpdateBidDto) {
-    return this.bidsService.update(+id, updateBidDto);
-  }
+  // Not provided in assessment
+  // @Patch(':id')
+  // async update(@Param('id') id: string, @Body() updateBidDto: UpdateBidDto) {
+  //   return this.bidsService.update(+id, updateBidDto);
+  // }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.bidsService.remove(+id);
-  }
+  // @Delete(':id')
+  // async remove(@Param('id') id: string) {
+  //   return this.bidsService.remove(+id);
+  // }
 }

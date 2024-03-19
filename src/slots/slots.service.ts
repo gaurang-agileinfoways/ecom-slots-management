@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -40,14 +41,12 @@ export class SlotsService {
     const total = createSlotDto.details.reduce((prev: number, curr) => {
       return prev + curr.price * curr.slots;
     }, 0);
-    console.log('total => ', total, product.price, createSlotDto);
 
     if (product.price === total) {
       const details = (
         await this.slotDetailServce.create(createSlotDto.details)
       ).map((d) => d._id);
       const data = { ...createSlotDto, details };
-      console.log(data);
       return (await this.slotSchema.create(data)).populate('details');
     } else {
       throw product.price > total
@@ -69,7 +68,8 @@ export class SlotsService {
 
   async findAll() {
     return await this.slotSchema.find()
-      .populate('details').exec();
+      .populate(['details', 'winner', 'slot_creator', 'product'])
+      .exec();
   }
 
   async findOne(_id: string) {
@@ -77,18 +77,18 @@ export class SlotsService {
       .populate(['details', 'winner', 'slot_creator', 'product']).exec();
   }
 
-  update(id: string, updateSlotDto: UpdateSlotDto) {
-    return `This action updates a #${id} slot`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} slot`;
+  async remove(id: string) {
+    const bids = await this.bidService.findBySlotId(id);
+    if (bids?.length === 0)
+      return await this.slotSchema.findOneAndDelete({ id });
+    else throw new NotAcceptableException('User already bidding on this product so you can\'t delete this slot.')
   }
 
   async findWinner(id: string) {
     const slot = await this.slotSchema.findById(id);
+    if(!slot) throw new NotFoundException("Invalid slot id.");
 
-    if (slot.winner !== null) throw new NotAcceptableException('Winner already choosen.');
+    if (slot?.winner !== null) throw new NotAcceptableException('Winner already choosen.');
     if (!slot.isActive) throw new NotAcceptableException('Sorry, this event is ended.');
 
     const slots = await this.bidService.findByProduct(slot.product._id.toString());

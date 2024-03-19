@@ -72,6 +72,7 @@ export class ProductsController {
 
     createProductDto.images = files.map((f) => f.path.toString());
     createProductDto.seller = req.user._id;
+    console.log(createProductDto);
     return new ResponseDto(
       'Product added successfully.',
       HttpStatus.CREATED,

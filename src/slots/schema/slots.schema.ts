@@ -34,7 +34,7 @@ export class Slots {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
   slot_creator: Users;
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users', default: null })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Users', default: null })
   winner: Users;
 }
 

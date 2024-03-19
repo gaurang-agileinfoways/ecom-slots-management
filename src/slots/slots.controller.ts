@@ -24,9 +24,10 @@ import { Roles } from 'src/roles/enums/roles.enum';
 export class SlotsController {
   constructor(private readonly slotsService: SlotsService) { }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(RoleGuard)
+  @Role(Roles.SELLER)
   @Post()
-  async create(@Body() createSlotDto: CreateSlotDto, @Req() request: any) {
+  async create(@Body() createSlotDto: CreateSlotDto, @Req() request) {
     return new ResponseDto(
       'slots added successfully.',
       HttpStatus.CREATED,
@@ -34,8 +35,6 @@ export class SlotsController {
     );
   }
 
-  @UseGuards(RoleGuard)
-  @Role(Roles.ADMIN)
   @Get()
   async findAll() {
     return new ResponseDto(
@@ -45,6 +44,8 @@ export class SlotsController {
     );
   }
 
+  @UseGuards(RoleGuard)
+  @Role(Roles.ADMIN, Roles.SUPER_ADMIN)
   @Get('get-winner')
   async findWinner(@Query('id') id: string) {
     const response = await this.slotsService.findWinner(id);
@@ -64,14 +65,9 @@ export class SlotsController {
     );
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateSlotDto: UpdateSlotDto) {
-    return this.slotsService.update(id, updateSlotDto);
-  }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.slotsService.remove(+id);
+    return this.slotsService.remove(id);
   }
 
 }

@@ -9,6 +9,7 @@ import {
   UseGuards,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,7 +23,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @ApiBody({ type: CreateUserDto })
   @Post()
@@ -62,22 +63,23 @@ export class UserController {
   @ApiBody({ type: UpdateUserDto })
   @UseGuards(AuthGuard)
   @Put('')
-  async update(@Query('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Query('id') id: string, @Body() updateUserDto: UpdateUserDto, @Req() request) {
     return new ResponseDto(
       'user updated successfully.',
       HttpStatus.OK,
-      await this.userService.update(id, updateUserDto),
+      await this.userService.update(id, updateUserDto, request.user._id),
     );
   }
 
   @ApiBearerAuth('access_token')
-  @UseGuards(AuthGuard)
+  @UseGuards(RoleGuard)
+  @Role(Roles.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return new ResponseDto(
       'user removed successfully.',
       HttpStatus.OK,
-      this.userService.remove(id),
+      await this.userService.remove(id),
     );
   }
 

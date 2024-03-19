@@ -11,6 +11,10 @@ export class CreateBidDto {
     product: string;
 
     @IsNotEmpty()
+    @IsString()
+    slot: string;
+
+    @IsNotEmpty()
     @ValidateNested({ each: true })
     @Type(() => SlotDetails)
     @IsArray()

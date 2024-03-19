@@ -21,10 +21,11 @@ export class BidsService {
 
     createBidDto.buyer = userId;
     const product = await this.slotservice.findSlotsByProduct(createBidDto.product);
+    if (!product) throw new NotFoundException('There are no slots in this products');
 
     createBidDto.bid_slots.forEach(p => {
       let isAvailable = false;
-      product.details.forEach(prod => {
+      product?.details?.forEach(prod => {
         if (prod.slots <= 0)
           throw new NotAcceptableException(`No slots are available for ${prod.name} package.`)
         console.log(prod._id.toString(), p.slot);
@@ -72,5 +73,9 @@ export class BidsService {
 
   async findByProduct(id: string) {
     return await this.bidschema.find({ product: id })
+  }
+
+  async findBySlotId(id: string) {
+    return await this.bidschema.find({ slot: id });
   }
 }

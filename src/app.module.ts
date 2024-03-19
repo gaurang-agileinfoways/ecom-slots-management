@@ -22,7 +22,7 @@ import { BidsModule } from './bids/bids.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET.toString(),
-      signOptions: { expiresIn: '5h' },
+      signOptions: { expiresIn: '15h' },
     }),
     AuthModule,
     RolesModule,
