@@ -28,11 +28,14 @@ export class Slots {
   @Prop({ default: Date.now() })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ default: true })
   isActive: boolean;
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
   slot_creator: Users;
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users', default: null })
+  winner: Users;
 }
 
 export const SlotSchema = SchemaFactory.createForClass(Slots);

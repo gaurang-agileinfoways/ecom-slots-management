@@ -9,8 +9,8 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { SlotsModule } from './slots/slots.module';
-import { SlotsBuyerModule } from './slots-buyer/slots-buyer.module';
 import { SlotDetailsModule } from './slot-details/slot-details.module';
+import { BidsModule } from './bids/bids.module';
 
 @Module({
   imports: [
@@ -29,8 +29,8 @@ import { SlotDetailsModule } from './slot-details/slot-details.module';
     UserModule,
     ProductsModule,
     SlotsModule,
-    SlotsBuyerModule,
     SlotDetailsModule,
+    BidsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

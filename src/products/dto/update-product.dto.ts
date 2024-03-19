@@ -4,41 +4,34 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsEmpty,
-  IsNotEmpty,
+  IsOptional,
   IsNumber,
   IsString,
 } from 'class-validator';
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
+
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   product_name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   desc: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   title: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   price: number;
 
   @ApiProperty()
   @IsEmpty()
   images: string[];
-
-  // @ApiProperty()
-  // @IsNotEmpty()
-  // @IsArray()
-  // stock: {
-  //   quantity: number;
-  //   size: string;
-  // }[];
 }

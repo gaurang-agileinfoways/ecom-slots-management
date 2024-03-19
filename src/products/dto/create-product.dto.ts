@@ -32,14 +32,6 @@ export class CreateProductDto {
   @IsEmpty()
   images: string[];
 
-  // @ApiProperty()
-  // @IsNotEmpty()
-  // @IsArray()
-  // stock: {
-  //   quantity: number;
-  //   size: string;
-  // }[];
-
   @ApiProperty()
   @IsEmpty()
   seller: string;

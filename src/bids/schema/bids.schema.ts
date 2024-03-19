@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Products } from 'src/products/schema/product.schema';
-import { Slots } from 'src/slots/schema/slots.schema';
+import { SlotDetails } from 'src/slot-details/schema/slot-details.schema';
 import { Users } from 'src/user/schema/user.schema';
 
 @Schema()
-export class BuySlots {
+export class Bids {
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
@@ -19,24 +19,25 @@ export class BuySlots {
   @Prop({
     required: true,
     validate: [
-      (details: BoughtSlot[]) => {
+      (details: BidingSlot[]) => {
         Array.isArray(details) && details.length > 0;
       },
       'Enter at least one element',
     ],
   })
-  bought_slot: BoughtSlot[];
+  bid_slots: BidingSlot[];
 
   @Prop({ required: true })
   total_price: number;
 }
 
-class BoughtSlot {
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Slots' })
-  product: Slots;
+class BidingSlot {
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'SlotDetails' })
+  slot: SlotDetails;
 
   @Prop({ required: true })
   quantity: number;
 }
 
-export const BuySlotSchema = SchemaFactory.createForClass(BuySlots);
+export const BidSchema = SchemaFactory.createForClass(Bids);

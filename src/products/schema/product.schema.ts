@@ -4,6 +4,9 @@ import { Users } from 'src/user/schema/user.schema';
 
 @Schema()
 export class Products {
+
+  _id: mongoose.Schema.Types.ObjectId;
+
   @Prop({ required: true })
   product_name: string;
 

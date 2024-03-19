@@ -28,7 +28,7 @@ import { ResponseDto } from 'src/utils/response.dto';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @ApiBody({ type: CreateProductDto })
   @ApiConsumes('multipart/form-data')
@@ -88,16 +88,6 @@ export class ProductsController {
     );
   }
 
-  // @Get('res')
-  // getFile(@Res({ passthrough: true }) res: Response): StreamableFile {
-  //   const file = createReadStream(path.join(process.cwd(), 'video.mp4'));
-  //   res.set({
-  //     'Content-Type': 'application/json',
-  //     'Content-Disposition': 'attachment; filename="package.json"',
-  //   });
-  //   return new StreamableFile(file);
-  // }
-
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return new ResponseDto(
@@ -107,15 +97,51 @@ export class ProductsController {
     );
   }
 
+  @ApiBody({ type: CreateProductDto })
+  @ApiConsumes('multipart/form-data')
+  @UseGuards(RoleGuard)
+  @Role(Roles.SELLER)
+  @UseInterceptors(
+    FilesInterceptor('files', 10, {
+      fileFilter: (req, file, cb) => {
+        if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/))
+          cb(null, true);
+        else {
+          cb(
+            new NotAcceptableException(
+              'File type not match, only jpg,webp,png,jpeg acceptable.',
+            ),
+            false,
+          );
+        }
+      },
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const filename = path
+            .parse(file.originalname)
+            .name.replace(/\s/g, '-');
+          const extension = path.parse(file.originalname).ext;
+          cb(null, `${filename}-${Date.now()}${extension}`);
+        },
+      }),
+    }),
+  )
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateProductDto: UpdateProductDto,
+    @Body('data') requestBody: any,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Req() req,
   ) {
+    const updateProductDto: UpdateProductDto =
+      typeof requestBody === 'string' ? JSON.parse(requestBody) : requestBody;
+
+    updateProductDto.images = files?.map((f) => f.path.toString());
     return new ResponseDto(
       'Product updated successfully.',
-      HttpStatus.OK,
-      await this.productsService.update(id, updateProductDto),
+      HttpStatus.CREATED,
+      await this.productsService.update(id, updateProductDto, req?.user?._id),
     );
   }
 

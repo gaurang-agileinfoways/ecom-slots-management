@@ -4,7 +4,7 @@ import { UpdateSlotDetailDto } from './dto/update-slot-detail.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { SlotDetails } from './schema/slot-details.schema';
-import { SlotDetails as SlotsDetails } from '../slots-buyer/dto/create-slots-buyer.dto';
+import { SlotDetails as SlotsDetails } from '../bids/dto/create-bid.dto';
 
 @Injectable()
 export class SlotDetailsService {
