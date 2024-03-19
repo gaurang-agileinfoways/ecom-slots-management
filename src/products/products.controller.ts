@@ -17,7 +17,7 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { RoleGuard } from 'src/roles/role.guard';
 import { Role } from 'src/roles/role.decorator';
 import { Roles } from 'src/roles/enums/roles.enum';
@@ -26,12 +26,17 @@ import { diskStorage } from 'multer';
 import * as path from 'path';
 import { ResponseDto } from 'src/utils/response.dto';
 
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
   @ApiBody({ type: CreateProductDto })
+  @ApiHeader({
+    Authentication: ""
+  })
   @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth()
   @UseGuards(RoleGuard)
   @Role(Roles.SELLER)
   @Post()
@@ -98,6 +103,7 @@ export class ProductsController {
     );
   }
 
+  @ApiBearerAuth()
   @ApiBody({ type: CreateProductDto })
   @ApiConsumes('multipart/form-data')
   @UseGuards(RoleGuard)
@@ -146,6 +152,9 @@ export class ProductsController {
     );
   }
 
+  @ApiBearerAuth()
+  @UseGuards(RoleGuard)
+  @Role(Roles.ADMIN, Roles.SUPER_ADMIN)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return new ResponseDto(

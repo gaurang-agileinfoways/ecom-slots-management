@@ -14,13 +14,14 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { ResponseDto } from 'src/utils/response.dto';
 import { RoleGuard } from 'src/roles/role.guard';
 import { Roles } from 'src/roles/enums/roles.enum';
 import { Role } from 'src/roles/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 
+@ApiTags("Users")
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
@@ -35,7 +36,7 @@ export class UserController {
     );
   }
 
-  @ApiBearerAuth('access_token')
+  @ApiBearerAuth()
   @UseGuards(RoleGuard)
   @Role(Roles.ADMIN)
   @Get()
@@ -47,7 +48,7 @@ export class UserController {
     );
   }
 
-  @ApiBearerAuth('access_token')
+  @ApiBearerAuth()
   @UseGuards(RoleGuard)
   @Role(Roles.ADMIN)
   @Get('user/:id')
@@ -59,7 +60,7 @@ export class UserController {
     );
   }
 
-  @ApiBearerAuth('access_token')
+  @ApiBearerAuth()
   @ApiBody({ type: UpdateUserDto })
   @UseGuards(AuthGuard)
   @Put('')
@@ -71,7 +72,7 @@ export class UserController {
     );
   }
 
-  @ApiBearerAuth('access_token')
+  @ApiBearerAuth()
   @UseGuards(RoleGuard)
   @Role(Roles.ADMIN)
   @Delete(':id')
@@ -83,7 +84,7 @@ export class UserController {
     );
   }
 
-  @ApiBearerAuth('access_token')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get('users')
   async findByUserName(@Query('username') user_name: string) {

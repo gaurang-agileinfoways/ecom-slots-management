@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsArray,
   IsEmpty,
   IsNotEmpty,
   IsNumber,
@@ -28,11 +27,11 @@ export class CreateProductDto {
   @IsNumber()
   price: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
   @IsEmpty()
   images: string[];
 
-  @ApiProperty()
+  // @ApiProperty({ nullable: true })
   @IsEmpty()
   seller: string;
 }

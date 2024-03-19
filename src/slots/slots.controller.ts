@@ -13,17 +13,18 @@ import {
 } from '@nestjs/common';
 import { SlotsService } from './slots.service';
 import { CreateSlotDto } from './dto/create-slot.dto';
-import { UpdateSlotDto } from './dto/update-slot.dto';
 import { ResponseDto } from 'src/utils/response.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { RoleGuard } from 'src/roles/role.guard';
 import { Role } from 'src/roles/role.decorator';
 import { Roles } from 'src/roles/enums/roles.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Slots')
 @Controller('slots')
 export class SlotsController {
   constructor(private readonly slotsService: SlotsService) { }
 
+  @ApiBearerAuth()
   @UseGuards(RoleGuard)
   @Role(Roles.SELLER)
   @Post()
@@ -44,6 +45,7 @@ export class SlotsController {
     );
   }
 
+  @ApiBearerAuth()
   @UseGuards(RoleGuard)
   @Role(Roles.ADMIN, Roles.SUPER_ADMIN)
   @Get('get-winner')
