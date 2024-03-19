@@ -21,10 +21,10 @@ import { Roles } from 'src/roles/enums/roles.enum';
 import { Role } from 'src/roles/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 
-@ApiTags("Users")
+@ApiTags('Users')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @ApiBody({ type: CreateUserDto })
   @Post()
@@ -64,7 +64,11 @@ export class UserController {
   @ApiBody({ type: UpdateUserDto })
   @UseGuards(AuthGuard)
   @Put('')
-  async update(@Query('id') id: string, @Body() updateUserDto: UpdateUserDto, @Req() request) {
+  async update(
+    @Query('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Req() request,
+  ) {
     return new ResponseDto(
       'user updated successfully.',
       HttpStatus.OK,

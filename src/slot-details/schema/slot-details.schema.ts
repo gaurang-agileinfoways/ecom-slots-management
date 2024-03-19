@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 @Schema()
 export class SlotDetails {
-
   _id: mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: true })

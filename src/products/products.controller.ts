@@ -17,7 +17,13 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiHeader,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RoleGuard } from 'src/roles/role.guard';
 import { Role } from 'src/roles/role.decorator';
 import { Roles } from 'src/roles/enums/roles.enum';
@@ -29,11 +35,11 @@ import { ResponseDto } from 'src/utils/response.dto';
 @ApiTags('Products')
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) { }
+  constructor(private readonly productsService: ProductsService) {}
 
   @ApiBody({ type: CreateProductDto })
   @ApiHeader({
-    Authentication: ""
+    Authentication: '',
   })
   @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()

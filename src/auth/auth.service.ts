@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async logIn(
     username: string,
@@ -31,6 +31,6 @@ export class AuthService {
         roles: user.roles,
         fullName: `${user.first_name} ${user.last_name}`,
       }),
-    }
+    };
   }
 }

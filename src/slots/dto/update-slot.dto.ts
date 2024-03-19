@@ -5,13 +5,12 @@ import { Type } from 'class-transformer';
 import { UpdateSlotDetailDto } from 'src/slot-details/dto/update-slot-detail.dto';
 
 export class UpdateSlotDto extends PartialType(CreateSlotDto) {
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateSlotDetailDto)
+  @IsArray()
+  details: UpdateSlotDetailDto[];
 
-    @IsNotEmpty()
-    @ValidateNested({ each: true })
-    @Type(() => UpdateSlotDetailDto)
-    @IsArray()
-    details: UpdateSlotDetailDto[];
-
-    @IsNotEmpty()
-    product: string;
+  @IsNotEmpty()
+  product: string;
 }

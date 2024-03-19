@@ -10,8 +10,8 @@ import { SlotsModule } from 'src/slots/slots.module';
   providers: [ProductsService],
   imports: [
     MongooseModule.forFeature([{ name: Products.name, schema: ProductSchema }]),
-    forwardRef(() => SlotsModule)
+    forwardRef(() => SlotsModule),
   ],
   exports: [ProductsService],
 })
-export class ProductsModule { }
+export class ProductsModule {}

@@ -17,14 +17,13 @@ import { BidsService } from 'src/bids/bids.service';
 
 @Injectable()
 export class SlotsService {
-
   constructor(
     @InjectModel(Slots.name) private slotSchema: Model<Slots>,
     @Inject(forwardRef(() => ProductsService))
     private readonly productService: ProductsService,
     private readonly slotDetailServce: SlotDetailsService,
-    @Inject(forwardRef(() => BidsService)) private bidService: BidsService
-  ) { }
+    @Inject(forwardRef(() => BidsService)) private bidService: BidsService,
+  ) {}
 
   async create(createSlotDto: CreateSlotDto, id: string) {
     createSlotDto.slot_creator = id;
@@ -50,11 +49,11 @@ export class SlotsService {
     } else {
       throw product.price > total
         ? new NotAcceptableException(
-          'Your total slot prices are lower than product price',
-        )
+            'Your total slot prices are lower than product price',
+          )
         : new NotAcceptableException(
-          'Your total slot prices are heigher than product price',
-        );
+            'Your total slot prices are heigher than product price',
+          );
     }
   }
 
@@ -66,38 +65,50 @@ export class SlotsService {
   }
 
   async findAll() {
-    return await this.slotSchema.find()
+    return await this.slotSchema
+      .find()
       .populate(['details', 'winner', 'slot_creator', 'product'])
       .exec();
   }
 
   async findOne(_id: string) {
-    return await this.slotSchema.findById(_id)
-      .populate(['details', 'winner', 'slot_creator', 'product']).exec();
+    return await this.slotSchema
+      .findById(_id)
+      .populate(['details', 'winner', 'slot_creator', 'product'])
+      .exec();
   }
 
   async remove(id: string) {
     const bids = await this.bidService.findBySlotId(id);
     if (bids?.length === 0)
       return await this.slotSchema.findOneAndDelete({ id });
-    else throw new NotAcceptableException('User already bidding on this product so you can\'t delete this slot.')
+    else
+      throw new NotAcceptableException(
+        "User already bidding on this product so you can't delete this slot.",
+      );
   }
 
   async findWinner(id: string) {
     const slot = await this.slotSchema.findById(id);
-    if(!slot) throw new NotFoundException("Invalid slot id.");
+    if (!slot) throw new NotFoundException('Invalid slot id.');
 
-    if (slot?.winner !== null) throw new NotAcceptableException('Winner already choosen.');
-    if (!slot.isActive) throw new NotAcceptableException('Sorry, this event is ended.');
+    if (slot?.winner !== null)
+      throw new NotAcceptableException('Winner already choosen.');
+    if (!slot.isActive)
+      throw new NotAcceptableException('Sorry, this event is ended.');
 
-    const slots = await this.bidService.findByProduct(slot.product._id.toString());
-    const userArray = []
-    slots.forEach(slot => {
-      for (let i = 0; i < slot.total_price; i++)
-        userArray.push(slot.buyer)
-    })
+    const slots = await this.bidService.findByProduct(
+      slot.product._id.toString(),
+    );
+    const userArray = [];
+    slots.forEach((slot) => {
+      for (let i = 0; i < slot.total_price; i++) userArray.push(slot.buyer);
+    });
     const random = Math.round(Math.random() * userArray.length);
-    const winner = await this.slotSchema.findByIdAndUpdate(slot._id, { winner: userArray[random], isActive: false });
+    const winner = await this.slotSchema.findByIdAndUpdate(slot._id, {
+      winner: userArray[random],
+      isActive: false,
+    });
     if (winner) return await this.findOne(slot._id.toString());
     else throw new InternalServerErrorException();
   }

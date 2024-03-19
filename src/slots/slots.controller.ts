@@ -22,7 +22,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @ApiTags('Slots')
 @Controller('slots')
 export class SlotsController {
-  constructor(private readonly slotsService: SlotsService) { }
+  constructor(private readonly slotsService: SlotsService) {}
 
   @ApiBearerAuth()
   @UseGuards(RoleGuard)
@@ -54,7 +54,7 @@ export class SlotsController {
     return new ResponseDto(
       `Congratulations, The winner is ${response.winner.first_name} ${response.winner.last_name}.`,
       HttpStatus.OK,
-      response
+      response,
     );
   }
 
@@ -71,5 +71,4 @@ export class SlotsController {
   remove(@Param('id') id: string) {
     return this.slotsService.remove(id);
   }
-
 }

@@ -4,20 +4,19 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Optional } from '@nestjs/common';
 
 export class UpdateSlotDetailDto extends PartialType(CreateSlotDetailDto) {
+  @IsNotEmpty()
+  @IsString()
+  _id: string;
 
-    @IsNotEmpty()
-    @IsString()
-    _id: string;
+  @IsNotEmpty()
+  @Optional()
+  name: string;
 
-    @IsNotEmpty()
-    @Optional()
-    name: string;
+  @IsNotEmpty()
+  @IsNumber()
+  price: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    price: number;
-
-    @IsNotEmpty()
-    @IsNumber()
-    slots: number;
+  @IsNotEmpty()
+  @IsNumber()
+  slots: number;
 }

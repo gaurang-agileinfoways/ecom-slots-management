@@ -10,7 +10,6 @@ import {
 } from 'class-validator';
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
-
   @ApiProperty()
   @IsOptional()
   @IsString()

@@ -17,7 +17,7 @@ export class Bids {
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Slots'
+    ref: 'Slots',
   })
   slot: Slots;
 
@@ -40,8 +40,11 @@ export class Bids {
 }
 
 class BidingSlot {
-
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'SlotDetails' })
+  @Prop({
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SlotDetails',
+  })
   slot: SlotDetails;
 
   @Prop({ required: true })

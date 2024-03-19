@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  HttpStatus,
+} from '@nestjs/common';
 import { BidsService } from './bids.service';
 import { CreateBidDto } from './dto/create-bid.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -8,40 +19,34 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @ApiTags('Bids')
 @Controller('bid')
 export class BidsController {
-  constructor(private readonly bidsService: BidsService) { }
+  constructor(private readonly bidsService: BidsService) {}
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Post('add')
-  async create(
-    @Body() createBidDto: CreateBidDto,
-    @Req() request,
-  ) {
+  async create(@Body() createBidDto: CreateBidDto, @Req() request) {
     return new ResponseDto(
       `Hello, ${request.user.fullName}. Your slot is booked successfully.`,
       HttpStatus.ACCEPTED,
-      await this.bidsService.create(
-        createBidDto,
-        request?.user?._id,
-      ),
+      await this.bidsService.create(createBidDto, request?.user?._id),
     );
   }
 
   @Get()
   async findAll() {
     return new ResponseDto(
-      "Bids retrieved successfully",
+      'Bids retrieved successfully',
       HttpStatus.OK,
-      await this.bidsService.findAll()
+      await this.bidsService.findAll(),
     );
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return new ResponseDto(
-      "Bids retrieved successfully",
+      'Bids retrieved successfully',
       HttpStatus.OK,
-      await this.bidsService.findOne(id)
+      await this.bidsService.findOne(id),
     );
   }
 

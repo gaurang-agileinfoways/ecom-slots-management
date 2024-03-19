@@ -14,8 +14,8 @@ import { BidsModule } from 'src/bids/bids.module';
     MongooseModule.forFeature([{ name: Slots.name, schema: SlotSchema }]),
     forwardRef(() => ProductsModule),
     SlotDetailsModule,
-    forwardRef(() => BidsModule)
+    forwardRef(() => BidsModule),
   ],
   exports: [SlotsService],
 })
-export class SlotsModule { }
+export class SlotsModule {}
